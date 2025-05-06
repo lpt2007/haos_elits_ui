@@ -1,48 +1,54 @@
       var_notify_doors: |
-        [[[
-          try {
-            const entityName = variables.var_entity_name;
-            if (!entityName || entityName === 'none') return 'door=;words=Vsa vrata so zaprta';
+        [[[ 
+            try {
+                  const entityName = variables.var_entity_name;
+                  if (!entityName || entityName === 'none') return 'door=;words=Vsa vrata so zaprta';
 
-            const doorPrefix = 'switch.' + entityName + '_door';
+                  const doorPrefix = 'switch.' + entityName + '_door';
 
-            const doors = Object.values(states).filter(entity =>
-              entity.entity_id.startsWith(doorPrefix)
-            );
+                  const doors = Object.values(states).filter(entity =>
+                        entity.entity_id.startsWith(doorPrefix)
+                  );
 
-            let hasUnknown = false;
-            let hasUnavailable = false;
+                  let doorResult = '';
+                  let wordsResult = '';
 
-            for (const entity of doors) {
-              if (entity.state === 'unknown') hasUnknown = true;
-              else if (entity.state === 'unavailable') hasUnavailable = true;
+                  if (doors.length === 0) {
+                        doorResult = 'I1';
+                        wordsResult = 'Informacija: Nobena entiteta ne vsebuje vrat';
+                  } else {
+                        let hasUnknown = false;
+                        let hasUnavailable = false;
+
+                        for (const entity of doors) {
+                              if (entity.state === 'unknown') hasUnknown = true;
+                              else if (entity.state === 'unavailable') hasUnavailable = true;
+                        }
+
+                        if (hasUnknown && hasUnavailable) doorResult = 'E3';
+                        else if (hasUnknown) doorResult = 'E1';
+                        else if (hasUnavailable) doorResult = 'E2';
+                        else {
+                              const count = doors.filter(entity => entity.state === 'on').length;
+                              doorResult = count > 0 ? count.toString() : '';
+                        }
+
+                        if (doorResult === '') wordsResult = 'Vsa vrata so zaprta';
+                        else if (doorResult === 'E1') wordsResult = 'Napaka: E1';
+                        else if (doorResult === 'E2') wordsResult = 'Napaka: E2';
+                        else if (doorResult === 'E3') wordsResult = 'Napaka: E3';
+                        else {
+                              const num = parseInt(doorResult);
+                              if (isNaN(num)) wordsResult = `NAPAKA: var_notify_door ni število (${doorResult})`;
+                              else if (num === 1) wordsResult = 'Ena vrata so odprta';
+                              else if (num === 2) wordsResult = 'Dvoje vrat sta odprta';
+                              else if (num === 3) wordsResult = 'Troje vrat so odprta';
+                              else wordsResult = `${num} vrat je odprtih`;
+                        }
+                  }
+
+                  return `door=${doorResult};words=${wordsResult}`;
+            } catch (e) {
+                  return `door=;words=NAPAKA: ${e.message}`;
             }
-
-            let doorResult = '';
-            if (hasUnknown && hasUnavailable) doorResult = 'E3';
-            else if (hasUnknown) doorResult = 'E1';
-            else if (hasUnavailable) doorResult = 'E2';
-            else {
-              const count = doors.filter(entity => entity.state === 'on').length;
-              doorResult = count > 0 ? count.toString() : '';
-            }
-
-            let wordsResult = '';
-            if (doorResult === '') wordsResult = 'Vsa vrata so zaprta';
-            else if (doorResult === 'E1') wordsResult = 'Napaka: E1';
-            else if (doorResult === 'E2') wordsResult = 'Napaka: E2';
-            else if (doorResult === 'E3') wordsResult = 'Napaka: E3';
-            else {
-              const num = parseInt(doorResult);
-              if (isNaN(num)) wordsResult = `NAPAKA: var_notify_door ni število (${doorResult})`;
-              else if (num === 1) wordsResult = 'Ena vrata so odprta';
-              else if (num === 2) wordsResult = 'Dvoje vrat sta odprta';
-              else if (num === 3) wordsResult = 'Troje vrat so odprta';
-              else wordsResult = `${num} vrat je odprtih`;
-            }
-
-            return `door=${doorResult};words=${wordsResult}`;
-          } catch (e) {
-            return `door=;words=NAPAKA: ${e.message}`;
-          }
         ]]]
