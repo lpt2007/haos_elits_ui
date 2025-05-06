@@ -1,0 +1,49 @@
+      var_notify_sockets: |
+        [[[
+          try {
+            const entityName = variables.var_entity_name;
+            if (!entityName || entityName === 'none') return 'socket=;words=Vse vtičnice so izklopljene';
+
+            const socketPrefix = 'switch.' + entityName + '_socket';
+
+            const sockets = Object.values(states).filter(entity =>
+              entity.entity_id.startsWith(socketPrefix)
+            );
+
+            let hasUnknown = false;
+            let hasUnavailable = false;
+
+            for (const entity of sockets) {
+              if (entity.state === 'unknown') hasUnknown = true;
+              else if (entity.state === 'unavailable') hasUnavailable = true;
+            }
+
+            let socketResult = '';
+            if (hasUnknown && hasUnavailable) socketResult = 'E3';
+            else if (hasUnknown) socketResult = 'E1';
+            else if (hasUnavailable) socketResult = 'E2';
+            else {
+              const count = sockets.filter(entity => entity.state === 'on').length;
+              socketResult = count > 0 ? count.toString() : '';
+            }
+
+            // Pretvori socketResult v besede
+            let wordsResult = '';
+            if (socketResult === '') wordsResult = 'Vse vtičnice so izklopljene';
+            else if (socketResult === 'E1') wordsResult = 'Napaka: E1';
+            else if (socketResult === 'E2') wordsResult = 'Napaka: E2';
+            else if (socketResult === 'E3') wordsResult = 'Napaka: E3';
+            else {
+              const num = parseInt(socketResult);
+              if (isNaN(num)) wordsResult = `NAPAKA: var_notify_socket ni število (${socketResult})`;
+              else if (num === 1) wordsResult = 'Ena vtičnica je vključena';
+              else if (num === 2) wordsResult = 'Dve vtičnici sta vključeni';
+              else if (num === 3) wordsResult = 'Tri vtičnice so vključene';
+              else wordsResult = `${num} vtičnic je vključenih`;
+            }
+
+            return `socket=${socketResult};words=${wordsResult}`;
+          } catch (e) {
+            return `socket=;words=NAPAKA: ${e.message}`;
+          }
+        ]]]
