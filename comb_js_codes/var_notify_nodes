@@ -10,36 +10,41 @@
               entity.entity_id.startsWith(nodePrefix)
             );
 
-            let hasUnknown = false;
-            let hasUnavailable = false;
-
-            for (const entity of nodes) {
-              if (entity.state === 'unknown') hasUnknown = true;
-              else if (entity.state === 'unavailable') hasUnavailable = true;
-            }
-
             let nodeResult = '';
-            if (hasUnknown && hasUnavailable) nodeResult = 'E3';
-            else if (hasUnknown) nodeResult = 'E1';
-            else if (hasUnavailable) nodeResult = 'E2';
-            else {
-              const count = nodes.filter(entity => entity.state === 'on').length;
-              nodeResult = count > 0 ? count.toString() : '';
-            }
-
-            // Pretvori nodeResult v opis
             let wordsResult = '';
-            if (nodeResult === '') wordsResult = 'Vse naprave so izklopljene';
-            else if (nodeResult === 'E1') wordsResult = 'Napaka: E1';
-            else if (nodeResult === 'E2') wordsResult = 'Napaka: E2';
-            else if (nodeResult === 'E3') wordsResult = 'Napaka: E3';
-            else {
-              const num = parseInt(nodeResult);
-              if (isNaN(num)) wordsResult = `NAPAKA: var_notify_node ni število (${nodeResult})`;
-              else if (num === 1) wordsResult = 'Ena naprava je vključena';
-              else if (num === 2) wordsResult = 'Dve napravi sta vključeni';
-              else if (num === 3) wordsResult = 'Tri naprave so vključene';
-              else wordsResult = `${num} naprav je vključenih`;
+
+            if (nodes.length === 0) {
+              nodeResult = 'I1';
+              wordsResult = 'Info: I1';
+            } else {
+              let hasUnknown = false;
+              let hasUnavailable = false;
+
+              for (const entity of nodes) {
+                if (entity.state === 'unknown') hasUnknown = true;
+                else if (entity.state === 'unavailable') hasUnavailable = true;
+              }
+
+              if (hasUnknown && hasUnavailable) nodeResult = 'E3';
+              else if (hasUnknown) nodeResult = 'E1';
+              else if (hasUnavailable) nodeResult = 'E2';
+              else {
+                const count = nodes.filter(entity => entity.state === 'on').length;
+                nodeResult = count > 0 ? count.toString() : '';
+              }
+
+              if (nodeResult === '') wordsResult = 'Vse naprave so izklopljene';
+              else if (nodeResult === 'E1') wordsResult = 'Napaka: E1';
+              else if (nodeResult === 'E2') wordsResult = 'Napaka: E2';
+              else if (nodeResult === 'E3') wordsResult = 'Napaka: E3';
+              else {
+                const num = parseInt(nodeResult);
+                if (isNaN(num)) wordsResult = `NAPAKA: var_notify_node ni število (${nodeResult})`;
+                else if (num === 1) wordsResult = 'Ena naprava je vključena';
+                else if (num === 2) wordsResult = 'Dve napravi sta vključeni';
+                else if (num === 3) wordsResult = 'Tri naprave so vključene';
+                else wordsResult = `${num} naprav je vključenih`;
+              }
             }
 
             return `node=${nodeResult};words=${wordsResult}`;
