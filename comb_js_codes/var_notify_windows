@@ -1,55 +1,55 @@
-var_notify_windows: |
-  [[[
-    try {
-      const entityName = variables.var_entity_name;
-      if (!entityName || entityName === 'none') return 'window=;words=Vsa okna so zaprta';
+      var_notify_windows: |
+        [[[
+          try {
+            const entityName = variables.var_entity_name;
+            if (!entityName || entityName === 'none') return 'window=;words=Vsa okna so zaprta';
 
-      const windowPrefix = 'switch.' + entityName + '_window';
+            const windowPrefix = 'switch.' + entityName + '_window';
 
-      const windows = Object.values(states).filter(entity =>
-        entity.entity_id.startsWith(windowPrefix)
-      );
+            const windows = Object.values(states).filter(entity =>
+              entity.entity_id.startsWith(windowPrefix)
+            );
 
-      let windowResult = '';
-      let wordsResult = '';
+            let windowResult = '';
+            let wordsResult = '';
 
-      if (windows.length === 0) {
-        windowResult = 'I1'; // Nobena entiteta ni bila najdena (tretji izhod)
-        wordsResult = 'Info: I1';
-      } else {
-        let hasUnknown = false;
-        let hasUnavailable = false;
+            if (windows.length === 0) {
+              windowResult = 'I1'; // Nobena entiteta ni bila najdena (tretji izhod)
+              wordsResult = 'Info: I1';
+            } else {
+              let hasUnknown = false;
+              let hasUnavailable = false;
 
-        for (const entity of windows) {
-          if (entity.state === 'unknown') hasUnknown = true;
-          else if (entity.state === 'unavailable') hasUnavailable = true;
-        }
+              for (const entity of windows) {
+                if (entity.state === 'unknown') hasUnknown = true;
+                else if (entity.state === 'unavailable') hasUnavailable = true;
+              }
 
-        if (hasUnknown && hasUnavailable) windowResult = 'E3';
-        else if (hasUnknown) windowResult = 'E1';
-        else if (hasUnavailable) windowResult = 'E2';
-        else {
-          const count = windows.filter(entity => entity.state === 'on').length;
-          windowResult = count > 0 ? count.toString() : '';
-        }
+              if (hasUnknown && hasUnavailable) windowResult = 'E3';
+              else if (hasUnknown) windowResult = 'E1';
+              else if (hasUnavailable) windowResult = 'E2';
+              else {
+               const count = windows.filter(entity => entity.state === 'on').length;
+                windowResult = count > 0 ? count.toString() : '';
+              }
 
-        // Pretvori rezultat v besedilo
-        if (windowResult === '') wordsResult = 'Vsa okna so zaprta';
-        else if (windowResult === 'E1') wordsResult = 'Napaka: E1';
-        else if (windowResult === 'E2') wordsResult = 'Napaka: E2';
-        else if (windowResult === 'E3') wordsResult = 'Napaka: E3';
-        else {
-          const num = parseInt(windowResult);
-          if (isNaN(num)) wordsResult = `NAPAKA: var_notify_window ni število (${windowResult})`;
-          else if (num === 1) wordsResult = 'Eno okno je odprto';
-          else if (num === 2) wordsResult = 'Dve okni sta odprti';
-          else if (num === 3) wordsResult = 'Tri okna so odprta';
-          else wordsResult = `${num} oken je odprtih`;
-        }
-      }
+              // Pretvori rezultat v besedilo
+              if (windowResult === '') wordsResult = 'Vsa okna so zaprta';
+              else if (windowResult === 'E1') wordsResult = 'Napaka: E1';
+              else if (windowResult === 'E2') wordsResult = 'Napaka: E2';
+              else if (windowResult === 'E3') wordsResult = 'Napaka: E3';
+              else {
+                const num = parseInt(windowResult);
+                if (isNaN(num)) wordsResult = `NAPAKA: var_notify_window ni število (${windowResult})`;
+                else if (num === 1) wordsResult = 'Eno okno je odprto';
+                else if (num === 2) wordsResult = 'Dve okni sta odprti';
+                else if (num === 3) wordsResult = 'Tri okna so odprta';
+                else wordsResult = `${num} oken je odprtih`;
+              }
+            }
 
-      return `window=${windowResult};words=${wordsResult}`;
-    } catch (e) {
-      return `window=;words=NAPAKA: ${e.message}`;
-    }
-  ]]]
+            return `window=${windowResult};words=${wordsResult}`;
+          } catch (e) {
+            return `window=;words=NAPAKA: ${e.message}`;
+          }
+        ]]]
