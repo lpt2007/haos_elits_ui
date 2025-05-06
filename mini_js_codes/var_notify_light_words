@@ -1,0 +1,24 @@
+      var_notify_light_words: |
+        [[[
+          try {
+            const val = variables.var_notify_light;
+
+            if (typeof val === 'undefined') return 'NAPAKA: var_notify_light ni definiran';
+            if (val === null || val === '' || val === 'none') return 'Vse luči so ugasnjene';
+
+            if (val === 'E1') return 'Napaka: E1';
+            if (val === 'E2') return 'Napaka: E2';
+            if (val === 'E3') return 'Napaka: E3';
+
+            const num = parseInt(val);
+            if (isNaN(num)) return `NAPAKA: var_notify_light ni število (${val})`;
+
+            if (num === 1) return 'Ena luč je prižgana';
+            if (num === 2) return 'Dve luči sta prižgani';
+            if (num === 3) return 'Tri luči so prižgane';
+
+            return `${num} luči je prižganih`;
+          } catch (e) {
+            return `NAPAKA: ${e.message}`;
+          }
+        ]]]
