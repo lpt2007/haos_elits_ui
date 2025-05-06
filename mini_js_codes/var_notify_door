@@ -1,0 +1,27 @@
+      var_notify_door: |
+        [[[ 
+          const entityName = variables.var_entity_name;
+          if (!entityName || entityName === 'none') return '';
+
+          const doorPrefix = 'switch.' + entityName + '_door';
+
+          const doors = Object.values(states).filter(entity =>
+            entity.entity_id.startsWith(doorPrefix)
+          );
+
+          let hasUnknown = false;
+          let hasUnavailable = false;
+
+          for (const entity of doors) {
+            if (entity.state === 'unknown') hasUnknown = true;
+            else if (entity.state === 'unavailable') hasUnavailable = true;
+          }
+
+          if (hasUnknown && hasUnavailable) return 'E3';
+          if (hasUnknown) return 'E1';
+          if (hasUnavailable) return 'E2';
+
+          const doorCount = doors.filter(entity => entity.state === 'on').length;
+
+          return doorCount > 0 ? doorCount.toString() : '';
+        ]]]
