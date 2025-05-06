@@ -1,0 +1,24 @@
+      var_notify_window_words: |
+        [[[
+          try {
+            const val = variables.var_notify_window;
+
+            if (typeof val === 'undefined') return 'NAPAKA: var_notify_window ni definiran';
+            if (val === null || val === '' || val === 'none') return 'Vsa okna so zaprta';
+
+            if (val === 'E1') return 'Napaka: eno ali več oken je v stanju "unknown"';
+            if (val === 'E2') return 'Napaka: eno ali več oken je v stanju "unavailable"';
+            if (val === 'E3') return 'Napaka: okna so v stanju "unknown" in "unavailable"';
+
+            const num = parseInt(val);
+            if (isNaN(num)) return `NAPAKA: var_notify_window ni število (${val})`;
+
+            if (num === 1) return 'Eno okno je odprto';
+            if (num === 2) return 'Dve okni sta odprti';
+            if (num === 3) return 'Tri okna so odprta';
+
+            return `${num} oken je odprtih`;
+          } catch (e) {
+            return `NAPAKA: ${e.message}`;
+          }
+        ]]]
