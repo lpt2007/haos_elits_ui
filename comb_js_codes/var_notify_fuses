@@ -1,0 +1,49 @@
+      var_notify_fuses: |
+        [[[
+          try {
+            const entityName = variables.var_entity_name;
+            if (!entityName || entityName === 'none') return 'fuse=;words=Vse varovalke so izklopljene';
+
+            const fusePrefix = 'switch.' + entityName + '_fuse';
+
+            const fuses = Object.values(states).filter(entity =>
+              entity.entity_id.startsWith(fusePrefix)
+            );
+
+            let hasUnknown = false;
+            let hasUnavailable = false;
+
+            for (const entity of fuses) {
+              if (entity.state === 'unknown') hasUnknown = true;
+              else if (entity.state === 'unavailable') hasUnavailable = true;
+            }
+
+            let fuseResult = '';
+            if (hasUnknown && hasUnavailable) fuseResult = 'E3';
+            else if (hasUnknown) fuseResult = 'E1';
+            else if (hasUnavailable) fuseResult = 'E2';
+            else {
+              const count = fuses.filter(entity => entity.state === 'on').length;
+              fuseResult = count > 0 ? count.toString() : '';
+            }
+
+            // Pretvori rezultat v besedilo
+            let wordsResult = '';
+            if (fuseResult === '') wordsResult = 'Vse varovalke so izklopljene';
+            else if (fuseResult === 'E1') wordsResult = 'Napaka: E1';
+            else if (fuseResult === 'E2') wordsResult = 'Napaka: E2';
+            else if (fuseResult === 'E3') wordsResult = 'Napaka: E3';
+            else {
+              const num = parseInt(fuseResult);
+              if (isNaN(num)) wordsResult = `NAPAKA: var_notify_fuse ni število (${fuseResult})`;
+              else if (num === 1) wordsResult = 'Ena varovalka je vključena';
+              else if (num === 2) wordsResult = 'Dve varovalke sta vključeni';
+              else if (num === 3) wordsResult = 'Tri varovalke so vključene';
+              else wordsResult = `${num} varovalk je vključenih`;
+            }
+
+            return `fuse=${fuseResult};words=${wordsResult}`;
+          } catch (e) {
+            return `fuse=;words=NAPAKA: ${e.message}`;
+          }
+        ]]]
