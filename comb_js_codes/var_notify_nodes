@@ -1,0 +1,49 @@
+      var_notify_nodes: |
+        [[[
+          try {
+            const entityName = variables.var_entity_name;
+            if (!entityName || entityName === 'none') return 'node=;words=Vse naprave so izklopljene';
+
+            const nodePrefix = 'switch.' + entityName + '_node';
+
+            const nodes = Object.values(states).filter(entity =>
+              entity.entity_id.startsWith(nodePrefix)
+            );
+
+            let hasUnknown = false;
+            let hasUnavailable = false;
+
+            for (const entity of nodes) {
+              if (entity.state === 'unknown') hasUnknown = true;
+              else if (entity.state === 'unavailable') hasUnavailable = true;
+            }
+
+            let nodeResult = '';
+            if (hasUnknown && hasUnavailable) nodeResult = 'E3';
+            else if (hasUnknown) nodeResult = 'E1';
+            else if (hasUnavailable) nodeResult = 'E2';
+            else {
+              const count = nodes.filter(entity => entity.state === 'on').length;
+              nodeResult = count > 0 ? count.toString() : '';
+            }
+
+            // Pretvori nodeResult v opis
+            let wordsResult = '';
+            if (nodeResult === '') wordsResult = 'Vse naprave so izklopljene';
+            else if (nodeResult === 'E1') wordsResult = 'Napaka: E1';
+            else if (nodeResult === 'E2') wordsResult = 'Napaka: E2';
+            else if (nodeResult === 'E3') wordsResult = 'Napaka: E3';
+            else {
+              const num = parseInt(nodeResult);
+              if (isNaN(num)) wordsResult = `NAPAKA: var_notify_node ni število (${nodeResult})`;
+              else if (num === 1) wordsResult = 'Ena naprava je vključena';
+              else if (num === 2) wordsResult = 'Dve napravi sta vključeni';
+              else if (num === 3) wordsResult = 'Tri naprave so vključene';
+              else wordsResult = `${num} naprav je vključenih`;
+            }
+
+            return `node=${nodeResult};words=${wordsResult}`;
+          } catch (e) {
+            return `node=;words=NAPAKA: ${e.message}`;
+          }
+        ]]]
