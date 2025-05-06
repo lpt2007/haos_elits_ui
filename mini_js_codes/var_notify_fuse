@@ -1,0 +1,27 @@
+      var_notify_fuse: |
+        [[[ 
+          const entityName = variables.var_entity_name;
+          if (!entityName || entityName === 'none') return '';
+
+          const fusePrefix = 'switch.' + entityName + '_fuse';
+
+          const fuses = Object.values(states).filter(entity =>
+            entity.entity_id.startsWith(fusePrefix)
+          );
+
+          let hasUnknown = false;
+          let hasUnavailable = false;
+
+          for (const entity of fuses) {
+            if (entity.state === 'unknown') hasUnknown = true;
+            else if (entity.state === 'unavailable') hasUnavailable = true;
+          }
+
+          if (hasUnknown && hasUnavailable) return 'E3';
+          if (hasUnknown) return 'E1';
+          if (hasUnavailable) return 'E2';
+
+          const fuseCount = fuses.filter(entity => entity.state === 'on').length;
+
+          return fuseCount > 0 ? fuseCount.toString() : '';
+        ]]]
