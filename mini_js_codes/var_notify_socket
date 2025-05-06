@@ -1,0 +1,28 @@
+      var_notify_socket: |
+        [[[ 
+          const entityName = variables.var_entity_name;
+          if (!entityName || entityName === 'none') return '';
+
+          const socketPrefix = 'switch.' + entityName + '_socket';
+
+          const sockets = Object.values(states).filter(entity =>
+            entity.entity_id.startsWith(socketPrefix)
+          );
+
+          let hasUnknown = false;
+          let hasUnavailable = false;
+
+          for (const entity of sockets) {
+            if (entity.state === 'unknown') hasUnknown = true;
+            else if (entity.state === 'unavailable') hasUnavailable = true;
+          }
+
+          if (hasUnknown && hasUnavailable) return 'E3';
+          if (hasUnknown) return 'E1';
+          if (hasUnavailable) return 'E2';
+
+          // če ni napak, štej vklopljene naprave
+          const socketCount = sockets.filter(entity => entity.state === 'on').length;
+
+          return socketCount > 0 ? socketCount.toString() : '';
+        ]]]
