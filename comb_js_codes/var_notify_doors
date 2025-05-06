@@ -29,9 +29,9 @@
 
             let wordsResult = '';
             if (doorResult === '') wordsResult = 'Vsa vrata so zaprta';
-            else if (doorResult === 'E1') wordsResult = 'Napaka: eno ali več vrat je v stanju "unknown"';
-            else if (doorResult === 'E2') wordsResult = 'Napaka: eno ali več vrat je v stanju "unavailable"';
-            else if (doorResult === 'E3') wordsResult = 'Napaka: vrata so v stanju "unknown" in "unavailable"';
+            else if (doorResult === 'E1') wordsResult = 'Napaka: E1';
+            else if (doorResult === 'E2') wordsResult = 'Napaka: E2';
+            else if (doorResult === 'E3') wordsResult = 'Napaka: E3';
             else {
               const num = parseInt(doorResult);
               if (isNaN(num)) wordsResult = `NAPAKA: var_notify_door ni število (${doorResult})`;
