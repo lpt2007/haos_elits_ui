@@ -1,0 +1,24 @@
+      var_notify_fuse_words: |
+        [[[
+          try {
+            const val = variables.var_notify_fuse;
+
+            if (typeof val === 'undefined') return 'NAPAKA: var_notify_fuse ni definiran';
+            if (val === null || val === '' || val === 'none') return 'Vse varovalke so izklopljene';
+
+            if (val === 'E1') return 'Napaka: ena ali več varovalk je v stanju "unknown"';
+            if (val === 'E2') return 'Napaka: ena ali več varovalk je v stanju "unavailable"';
+            if (val === 'E3') return 'Napaka: varovalke so v stanju "unknown" in "unavailable"';
+
+            const num = parseInt(val);
+            if (isNaN(num)) return `NAPAKA: var_notify_fuse ni število (${val})`;
+
+            if (num === 1) return 'Ena varovalka je vključena';
+            if (num === 2) return 'Dve varovalke sta vključeni';
+            if (num === 3) return 'Tri varovalke so vključene';
+
+            return `${num} varovalk je vključenih`;
+          } catch (e) {
+            return `NAPAKA: ${e.message}`;
+          }
+        ]]]
