@@ -1,0 +1,49 @@
+      var_notify_lights: |
+        [[[
+          try {
+            const entityName = variables.var_entity_name;
+            if (!entityName || entityName === 'none') return 'light=;words=Vse luči so ugasnjene';
+
+            const lightPrefix = 'light.' + entityName + '_light_';
+
+            const lights = Object.values(states).filter(entity =>
+              entity.entity_id.startsWith(lightPrefix)
+            );
+
+            let hasUnknown = false;
+            let hasUnavailable = false;
+
+            for (const entity of lights) {
+              if (entity.state === 'unknown') hasUnknown = true;
+              else if (entity.state === 'unavailable') hasUnavailable = true;
+            }
+
+            let lightResult = '';
+            if (hasUnknown && hasUnavailable) lightResult = 'E3';
+            else if (hasUnknown) lightResult = 'E1';
+            else if (hasUnavailable) lightResult = 'E2';
+            else {
+              const count = lights.filter(entity => entity.state === 'on').length;
+              lightResult = count > 0 ? count.toString() : '';
+            }
+
+            // Pretvori lightResult v besede
+            let wordsResult = '';
+            if (lightResult === '') wordsResult = 'Vse luči so ugasnjene';
+            else if (lightResult === 'E1') wordsResult = 'Napaka: E1';
+            else if (lightResult === 'E2') wordsResult = 'Napaka: E2';
+            else if (lightResult === 'E3') wordsResult = 'Napaka: E3';
+            else {
+              const num = parseInt(lightResult);
+              if (isNaN(num)) wordsResult = `NAPAKA: var_notify_light ni število (${lightResult})`;
+              else if (num === 1) wordsResult = 'Ena luč je prižgana';
+              else if (num === 2) wordsResult = 'Dve luči sta prižgani';
+              else if (num === 3) wordsResult = 'Tri luči so prižgane';
+              else wordsResult = `${num} luči je prižganih`;
+            }
+
+            return `light=${lightResult};words=${wordsResult}`;
+          } catch (e) {
+            return `light=;words=NAPAKA: ${e.message}`;
+          }
+        ]]]
