@@ -15,7 +15,7 @@
 
                   if (doors.length === 0) {
                         doorResult = 'I1';
-                        wordsResult = 'Informacija: Nobena entiteta ne vsebuje vrat';
+                        wordsResult = 'Info: I1';
                   } else {
                         let hasUnknown = false;
                         let hasUnavailable = false;
