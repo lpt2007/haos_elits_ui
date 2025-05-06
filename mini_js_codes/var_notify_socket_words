@@ -1,0 +1,23 @@
+      var_notify_socket_words: |
+        [[[
+          try {
+            const val = variables.var_notify_socket;
+            if (typeof val === 'undefined') return 'NAPAKA: var_notify_socket ni definiran';
+            if (val === null || val === '' || val === 'none') return 'Vse vtičnice so izklopljene';
+
+            if (val === 'E1') return 'Napaka: E1';
+            if (val === 'E2') return 'Napaka: E2';
+            if (val === 'E3') return 'Napaka: E3';
+
+            const num = parseInt(val);
+            if (isNaN(num)) return `NAPAKA: var_notify_socket ni število (${val})`;
+
+            if (num === 1) return 'Ena vtičnica je vključena';
+            if (num === 2) return 'Dve vtičnici sta vključeni';
+            if (num === 3) return 'Tri vtičnice so vključene';
+
+            return `${num} vtičnic je vključenih`;
+          } catch (e) {
+            return `NAPAKA: ${e.message}`;
+          }
+        ]]]
