@@ -1,0 +1,24 @@
+      var_notify_door_words: |
+        [[[
+          try {
+            const val = variables.var_notify_door;
+
+            if (typeof val === 'undefined') return 'NAPAKA: var_notify_door ni definiran';
+            if (val === null || val === '' || val === 'none') return 'Vsa vrata so zaprta';
+
+            if (val === 'E1') return 'Napaka: eno ali več vrat je v stanju "unknown"';
+            if (val === 'E2') return 'Napaka: eno ali več vrat je v stanju "unavailable"';
+            if (val === 'E3') return 'Napaka: vrata so v stanju "unknown" in "unavailable"';
+
+            const num = parseInt(val);
+            if (isNaN(num)) return `NAPAKA: var_notify_door ni število (${val})`;
+
+            if (num === 1) return 'Ena vrata so odprta';
+            if (num === 2) return 'Dvoje vrat sta odprta';
+            if (num === 3) return 'Troje vrat so odprta';
+
+            return `${num} vrat je odprtih`;
+          } catch (e) {
+            return `NAPAKA: ${e.message}`;
+          }
+        ]]]
