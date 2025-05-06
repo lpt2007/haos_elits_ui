@@ -1,0 +1,24 @@
+      var_notify_node_words: |
+        [[[
+          try {
+            const val = variables.var_notify_node;
+
+            if (typeof val === 'undefined') return 'NAPAKA: var_notify_node ni definiran';
+            if (val === null || val === '' || val === 'none') return 'Vse naprave so izklopljene';
+
+            if (val === 'E1') return 'Napaka: ena ali več naprav je v stanju "unknown"';
+            if (val === 'E2') return 'Napaka: ena ali več naprav je v stanju "unavailable"';
+            if (val === 'E3') return 'Napaka: naprave so v stanju "unknown" in "unavailable"';
+
+            const num = parseInt(val);
+            if (isNaN(num)) return `NAPAKA: var_notify_node ni število (${val})`;
+
+            if (num === 1) return 'Ena naprava je vključena';
+            if (num === 2) return 'Dve napravi sta vključeni';
+            if (num === 3) return 'Tri naprave so vključene';
+
+            return `${num} naprav je vključenih`;
+          } catch (e) {
+            return `NAPAKA: ${e.message}`;
+          }
+        ]]]
