@@ -1,9 +1,9 @@
       var_notify_lights: |
             [[[  
-                  /// USAGE:
-                  /// var_light: "[[[ return variables.var_notify_lights.split(';')[0].split('=')[1]; ]]]"
-                  /// var_word: "[[[ return variables.var_notify_lights.split(';')[1].split('=')[1]; ]]]"
-                  /// var_brightness: "[[[ return variables.var_notify_lights.split(';')[2].split('=')[1]; ]]]"
+                  // USAGE:
+                  // var_light: "[[[ return variables.var_notify_lights.split(';')[0].split('=')[1]; ]]]"
+                  // var_word: "[[[ return variables.var_notify_lights.split(';')[1].split('=')[1]; ]]]"
+                  // var_brightness: "[[[ return variables.var_notify_lights.split(';')[2].split('=')[1]; ]]]"
               try {
                 const entityName = variables.var_entity_name;
                 if (!entityName || entityName === 'none') return 'light=;words=Vse luči so ugasnjene;brightness=';
