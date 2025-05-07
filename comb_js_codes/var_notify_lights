@@ -1,85 +1,80 @@
       var_notify_lights: |
-            [[[  
-                  // USAGE:
-                  // var_light: "[[[ return variables.var_notify_lights.split(';')[0].split('=')[1]; ]]]"
-                  // var_word: "[[[ return variables.var_notify_lights.split(';')[1].split('=')[1]; ]]]"
-                  // var_brightness: "[[[ return variables.var_notify_lights.split(';')[2].split('=')[1]; ]]]"
-              try {
-                const entityName = variables.var_entity_name;
-                if (!entityName || entityName === 'none') return 'light=;words=Vse luči so ugasnjene;brightness=';
+      [[[  
+            // USAGE:
+            // var_light: "[[[ return variables.var_notify_lights.split(';')[0].split('=')[1]; ]]]"
+            // var_word: "[[[ return variables.var_notify_lights.split(';')[1].split('=')[1]; ]]]"
+            // var_brightness: "[[[ return variables.var_notify_lights.split(';')[2].split('=')[1]; ]]]"
+            try {
+                  const entityName = variables.var_entity_name;
+                  if (!entityName || entityName === 'none') return 'light=;words=Vse luči so ugasnjene;brightness=';
 
-                const lightPrefix = 'light.' + entityName + '_light_';
-                const lights = Object.values(states).filter(entity =>
-                  entity.entity_id.startsWith(lightPrefix)
-                );
+                  const lightPrefix = 'light.' + entityName + '_light_';
+                  const lights = Object.values(states).filter(entity =>
+                        entity.entity_id.startsWith(lightPrefix)
+                  );
 
-                let lightResult = '';
-                let wordsResult = '';
-                let brightnessResult = '';
+                  let lightResult = '';
+                  let wordsResult = '';
 
-                if (lights.length === 0) {
-                  lightResult = 'I1';
-                  wordsResult = 'Info: I1';
-                } else {
-                  let hasUnknown = false;
-                  let hasUnavailable = false;
-
-                  const onLights = [];
-                  let brightnessSum = 0;
-                  let brightnessCount = 0;
-
-                  for (const entity of lights) {
-                    if (entity.state === 'unknown') {
-                      hasUnknown = true;
-                    } else if (entity.state === 'unavailable') {
-                      hasUnavailable = true;
-                    } else if (entity.state === 'on') {
-                      onLights.push(entity);
-                      const b = entity.attributes?.brightness;
-                      if (b !== undefined) {
-                        brightnessSum += b;
-                        brightnessCount++;
-                      }
-                    }
-                  }
-
-                  if (hasUnknown && hasUnavailable) lightResult = 'E3';
-                  else if (hasUnknown) lightResult = 'E1';
-                  else if (hasUnavailable) lightResult = 'E2';
-                  else {
-                    lightResult = onLights.length > 0 ? onLights.length.toString() : '';
-                  }
-
-                  if (brightnessCount > 0) {
-                    brightnessResult = Math.round(brightnessSum / brightnessCount / 255 * 100).toString();
-                  }
-
-                  if (lightResult === '') {
-                    wordsResult = 'Vse luči so ugasnjene';
-                  } else if (lightResult === 'E1') {
-                    wordsResult = 'Napaka: E1';
-                  } else if (lightResult === 'E2') {
-                    wordsResult = 'Napaka: E2';
-                  } else if (lightResult === 'E3') {
-                    wordsResult = 'Napaka: E3';
+                  if (lights.length === 0) {
+                        lightResult = 'I1';
+                        wordsResult = 'Info: I1';
                   } else {
-                    const num = parseInt(lightResult);
-                    if (isNaN(num)) {
-                      wordsResult = `NAPAKA: var_notify_light ni število (${lightResult})`;
-                    } else if (num === 1) {
-                      wordsResult = 'Ena luč je prižgana';
-                    } else if (num === 2) {
-                      wordsResult = 'Dve luči sta prižgani';
-                    } else if (num === 3) {
-                      wordsResult = 'Tri luči so prižgane';
-                    } else {
-                      wordsResult = `${num} luči je prižganih`;
-                    }
-                  }
-                }
+                        let hasUnknown = false;
+                        let hasUnavailable = false;
 
-                return `light=${lightResult};words=${wordsResult};brightness=${brightnessResult}`;
-              } catch (e) {
-                return `light=;words=NAPAKA: ${e.message};brightness=`;
-              }
-            ]]] 
+                        const onLights = [];
+
+                        for (const entity of lights) {
+                              if (entity.state === 'unknown') {
+                                    hasUnknown = true;
+                              } else if (entity.state === 'unavailable') {
+                                    hasUnavailable = true;
+                              } else if (entity.state === 'on') {
+                                    onLights.push(entity);
+                              }
+                        }
+
+                        if (hasUnknown && hasUnavailable) lightResult = 'E3';
+                        else if (hasUnknown) lightResult = 'E1';
+                        else if (hasUnavailable) lightResult = 'E2';
+                        else {
+                              lightResult = onLights.length > 0 ? onLights.length.toString() : '';
+                        }
+
+                        if (lightResult === '') {
+                              wordsResult = 'Vse luči so ugasnjene';
+                        } else if (lightResult === 'E1') {
+                              wordsResult = 'Napaka: E1';
+                        } else if (lightResult === 'E2') {
+                              wordsResult = 'Napaka: E2';
+                        } else if (lightResult === 'E3') {
+                              wordsResult = 'Napaka: E3';
+                        } else {
+                              const num = parseInt(lightResult);
+                              if (isNaN(num)) {
+                                    wordsResult = `NAPAKA: var_notify_light ni število (${lightResult})`;
+                              } else if (num === 1) {
+                                    wordsResult = 'Ena luč je prižgana';
+                              } else if (num === 2) {
+                                    wordsResult = 'Dve luči sta prižgani';
+                              } else if (num === 3) {
+                                    wordsResult = 'Tri luči so prižgane';
+                              } else {
+                                    wordsResult = `${num} luči je prižganih`;
+                              }
+                        }
+                  }
+
+                  // Svetlost samo glavne luči (var_room_light)
+                  const mainLight = states[variables.var_room_light];
+                  let brightnessResult = '';
+                  if (mainLight && mainLight.attributes && mainLight.attributes.brightness !== undefined && mainLight.state === 'on') {
+                        brightnessResult = Math.round(mainLight.attributes.brightness / 255 * 100).toString();
+                  }
+
+                  return `light=${lightResult};words=${wordsResult};brightness=${brightnessResult}`;
+            } catch (e) {
+                  return `light=;words=NAPAKA: ${e.message};brightness=`;
+            }
+      ]]]
