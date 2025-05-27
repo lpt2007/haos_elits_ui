@@ -5,7 +5,7 @@
       left: 50%                    #button location from left
     template:
       - variable_room_office       #room variables - var_all
-      - menu_top
+      - menu_top                   # template - menu_top - menu_all
     styles:                        #custom stying of menu_top template
       card:
         - width: 800px             #changed width
