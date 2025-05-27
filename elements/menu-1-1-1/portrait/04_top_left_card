@@ -1,0 +1,18 @@
+cn: top_left_card
+type: custom:button-card
+variables:
+  var_path: none
+style:
+  top: 4%
+  left: 11%
+template:
+  - button_2
+  - show_pics
+  - arrow_back
+styles:
+  card:
+    - background: transparent
+    - border: none
+tap_action:
+  action: navigate
+  navigation_path: "[[[ return variables.var_path ]]]"
