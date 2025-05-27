@@ -12,6 +12,7 @@
     styles:
       card:
         - background: transparent
+        - border: none
     tap_action:
       action: navigate
       navigation_path: "[[[ return variables.var_path ]]]"
