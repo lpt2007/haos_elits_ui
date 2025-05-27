@@ -1,0 +1,11 @@
+cn: display_status
+type: custom:button-card
+style:
+  top: 4%
+  left: 50%
+template:
+  - variable_room_office
+  - display_clock_motion
+styles:
+  card:
+    - width: 250px
