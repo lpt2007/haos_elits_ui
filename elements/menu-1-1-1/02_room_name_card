@@ -1,0 +1,9 @@
+  - cn: room_name_card
+    type: custom:button-card
+    template:
+      - variable_room_office
+      - name_card
+    name: PISARNA
+    style:
+      top: 30.5%
+      left: 19.5%
