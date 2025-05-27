@@ -1,0 +1,13 @@
+  - cn: room_name_card
+    type: custom:button-card
+    template:
+      - variable_room_office
+      - name_card
+    name: PISARNA
+    style:
+      top: 96%
+      left: 50%
+    styles:
+      card:
+        - border: none
+        - width: 200px
