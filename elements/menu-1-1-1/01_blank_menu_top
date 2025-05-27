@@ -4,7 +4,7 @@
       top: 10%
       left: 50%
     template:
-      - variable_room_office  //room variables
+      - variable_room_office  #room variables - var_all
       - menu_top
     styles:
       card:
