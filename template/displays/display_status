@@ -1,0 +1,32 @@
+  display_status:
+    template:
+      - triggers_update
+      - show_state
+    state_display: |
+      [[[ return variables.var_state_display; ]]]
+    styles:
+      card:
+        - background-color: '#96989A'
+        - border-radius: 8px 8px 8px 8px
+        - border: none
+        - box-shadow: none
+        - width: 350px
+        - height: 50px
+      state:
+        - white-space: nowrap
+        - overflow: hidden
+        - display: block
+        - text-overflow: unset
+        - width: |-
+            [[[
+              const text = states['sensor.presence_alert']?.state || "";
+              if (!text) return "230px";
+              const avgCharWidth = 13;
+              const padding = 20;
+              return (text.length * avgCharWidth + padding) + "px";
+            ]]]
+        - animation: |-
+            [[[ 
+              const text = states['sensor.presence_alert']?.state || "";
+              return text.length > 21 ? "scrolling 10s linear infinite" : "none";
+            ]]]
