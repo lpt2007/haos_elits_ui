@@ -14,7 +14,7 @@
                   let wordsResult = '';
 
                   if (doors.length === 0) {
-                        doorResult = 'I1';
+                        doorResult = 'I1'; // Nobena entiteta ni bila najdena (tretji izhod)
                         wordsResult = 'Info: I1';
                   } else {
                         let hasUnknown = false;
