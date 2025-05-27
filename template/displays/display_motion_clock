@@ -1,4 +1,4 @@
-  display_status:
+  display_motion_clock:
     template:
       - triggers_update
       - show_state
