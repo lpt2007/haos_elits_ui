@@ -1,0 +1,14 @@
+  triggers_update:
+    triggers_update: all
+  show_last_changed:
+    show_last_changed: true
+  show_state:
+    show_state: true
+  show_label:
+    show_label: true
+  hide_name:
+    show_name: false
+  hide_icon:
+    show_icon: false
+  show_pics:
+    show_entity_picture: true
