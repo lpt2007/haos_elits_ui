@@ -40,10 +40,10 @@
               else {
                 const num = parseInt(nodeResult);
                 if (isNaN(num)) wordsResult = `NAPAKA: var_notify_node ni število (${nodeResult})`;
-                else if (num === 1) wordsResult = 'Ena naprava je vključena';
-                else if (num === 2) wordsResult = 'Dve napravi sta vključeni';
-                else if (num === 3) wordsResult = 'Tri naprave so vključene';
-                else wordsResult = `${num} naprav je vključenih`;
+                else if (num === 1) wordsResult = 'Eno vozlišče je vključeno';
+                else if (num === 2) wordsResult = 'Dve vozlišči sta vključeni';
+                else if (num === 3) wordsResult = 'Tri vozlišča so vključena';
+                else wordsResult = `${num} vozlišč je vključenih`;
               }
             }
 
