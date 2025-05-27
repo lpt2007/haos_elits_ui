@@ -6,9 +6,12 @@ style:
   top: 10%
   left: 5%
 template:
-  - button_2_transparent
+  - button_2
   - show_pics
   - arrow_back
+styles:
+  card:
+    - background: transparent
 tap_action:
   action: navigate
   navigation_path: "[[[ return variables.var_path ]]]"
