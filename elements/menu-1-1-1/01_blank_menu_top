@@ -1,11 +1,11 @@
   - cn: blank_menu_top
     type: custom:button-card
     style:
-      top: 10%
-      left: 50%
+      top: 10%                     #button location from top
+      left: 50%                    #button location from left
     template:
-      - variable_room_office  #room variables - var_all
+      - variable_room_office       #room variables - var_all
       - menu_top
-    styles:
+    styles:                        #custom stying of menu_top template
       card:
-        - width: 800px
+        - width: 800px             #changed width
