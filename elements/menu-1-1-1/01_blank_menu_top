@@ -1,0 +1,11 @@
+  - cn: blank_menu_top
+    type: custom:button-card
+    style:
+      top: 10%
+      left: 50%
+    template:
+      - variable_room_office  //room variables
+      - menu_top
+    styles:
+      card:
+        - width: 800px
