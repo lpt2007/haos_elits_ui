@@ -1,0 +1,8 @@
+cn: display_status
+type: custom:button-card
+style:
+  top: 10%
+  left: 62.5%
+template:
+  - variable_room_office
+  - display_status
