@@ -5,4 +5,4 @@ style:
   left: 62.5%
 template:
   - variable_room_office
-  - display_status
+  - display_clock_motion
