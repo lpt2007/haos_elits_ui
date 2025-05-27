@@ -1,0 +1,22 @@
+  button_menu_small:
+    template:
+      - hide_icon
+      - show_label
+      - triggers_update
+    styles:
+      card:
+        - background-color: rgba(150, 152, 154, 0.85)
+        - border-color: black
+        - width: 210px
+        - height: 75px
+      name:
+        - font-size: 30px
+        - text-shadow: 2px 2px 5px rgba(0, 0, 0, 1)
+        - justify-self: center
+        - align-self: center
+      label:
+        - font-size: 15px
+        - font-weight: 200
+        - text-shadow: 2px 2px 5px rgba(0, 0, 0, 1)
+        - justify-self: center
+        - align-self: end
